@@ -1,8 +1,5 @@
 @author: Alex Samson 
 
-#NOTE: I was unable to safe the figures as a PDF 
-#the code did run though
-
 library(tidyverse)
 
 # load in the data
@@ -118,25 +115,26 @@ ggsave('figures/gender.pdf',units='in',width=5,height=5)
 # HINT: check out the case_when function:
 #     https://dplyr.tidyverse.org/reference/case_when.html
 ipip.comp <- ipip.comp %>% 
-  mutate(BMI.cat = case_when(BMI<18.5 ~'underweight',
-                             BMI>=18.5 & BMI <=25 ~ 'healthy', 
-                             BMI>25 & BMI <= 30 ~ 'overweight', 
-                             BMI>30 ~'obese'))
+  mutate(BMI1 = case_when(
+    BMI<18.5 ~'underweight',
+    BMI>=18.5 & BMI <=25 ~ 'healthy', 
+    BMI>25 & BMI <= 30 ~ 'overweight', 
+    BMI>30 ~'obese'))
 
 # turn BMI_cat into a factor and order it with levels
-ipip.comp$BMI.cat <- factor(ipip.comp$BMI.cat, levels=c(
+ipip.comp$BMI1 <- factor(ipip.comp$BMI.cat, levels=c(
   'underweight', 'healthy', 'overweight', 'obese'))
 
 # summarise trait values by BMI categories  
 bmi.avg <- ipip.comp %>% 
-  group_by(BMI.cat, trait) %>%
+  group_by(BMI1, trait) %>%
   summarise(n = length(unique(RID)), 
             avg = mean(mean.trait), 
             sem = sd(mean.trait)/sqrt(n-1))
 
 # create BMI plot and compare to the answer figure:
-ggplot(bmi.avg,aes(x=trait,y=avg,colour=BMI_cat))+
-  geom_pointrange(aes(ymin=avg-SE,ymax=avg+SE),
+ggplot(bmi.avg,aes(x=trait,y=avg,colour=BMI1))+
+  geom_pointrange(aes(ymin=avg-sem,ymax=avg+sem),
                   position=dodge)+
   labs(x='big 5 trait',y='mean trait value',title='Big 5 and BMI')
 ggsave('figures/BMI.pdf',units='in',width=7,height=5)
@@ -147,7 +145,7 @@ ggsave('figures/BMI.pdf',units='in',width=7,height=5)
 # NOTE: check out the cor() function by running ?cor in the console
 age.avg <- ipip.comp %>% 
   group_by(trait)%>%
-  summarise(corrocoef = cor(age, mean.trait))
+  summarise(corrcoef = cor(age, mean.trait))
 
 # create age plot and compare to the answer figure
 ggplot(age.avg,aes(x=trait,y=corrcoef))+
