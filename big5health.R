@@ -1,4 +1,4 @@
-@author: Alex Samson 
+@author: Alex Samson  
 
 library(tidyverse)
 
@@ -47,7 +47,6 @@ ipip.comp <- ipip.l %>%
   group_by(RID,trait) %>%
   summarise(mean.trait = mean(value))
 
-
 # Cleaning up the other variables -----------------------------------------
 
 # Depending on how you solved the above steps, your ipip.comp ttibble may or may
@@ -67,7 +66,6 @@ ipip.comp <- ipip %>%
 ipip.comp$exer <- factor(ipip.comp$exer, 
                          levels=c('veryRarelyNever', 'less1mo',
                                   'less1wk','1or2wk','3or5wk','more5wk'))
-
 
 
 # Analyze the data! -------------------------------------------------------
